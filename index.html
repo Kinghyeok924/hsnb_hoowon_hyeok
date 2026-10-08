@@ -1,0 +1,2197 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>화성시남부노인복지관 후원물품 수입·사용 관리대장</title>
+  <!-- Pretendard Web Font -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <!-- SheetJS for Excel Download -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <style>
+    /* ==========================================================================
+       DESIGN SYSTEM TOKENS (Based on DESIGN.md - Airbnb Light Theme)
+       ========================================================================== */
+    :root {
+      --color-rausch: #ff385c;
+      --color-rausch-600: #e00b41;
+      --color-hof: #222222;
+      --color-foggy: #6a6a6a;
+      --color-grey-500: #c1c1c1;
+      --color-bebe: #ebebeb;
+      --color-deco: #dddddd;
+      --color-faint: #f7f7f7;
+      --color-white: #ffffff;
+      --color-success: #008a05;
+      --color-success-bg: #eafbe7;
+      --color-warning: #c25e00;
+      --color-warning-bg: #fff5e6;
+      --color-danger: #c13515;
+      --color-danger-bg: #fdf0ed;
+
+      --font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Segoe UI", sans-serif;
+
+      --radius-sm: 6px;
+      --radius-inputs: 8px;
+      --radius-cards: 12px;
+      --radius-pill: 9999px;
+
+      --shadow-subtle: 0px 0px 0px 1px rgba(0, 0, 0, 0.04), 0px 2px 6px 0px rgba(0, 0, 0, 0.04), 0px 4px 8px 0px rgba(0, 0, 0, 0.06);
+      --shadow-card: 0 4px 14px rgba(0, 0, 0, 0.06);
+      --shadow-modal: 0 16px 40px rgba(0, 0, 0, 0.22);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--color-white);
+      color: var(--color-hof);
+      line-height: 1.45;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ==========================================================================
+       TOP NAVIGATION BAR (Airbnb Style Header)
+       ========================================================================== */
+    .top-header {
+      height: 80px;
+      background-color: var(--color-white);
+      border-bottom: 1px solid var(--color-bebe);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 36px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-logo-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--color-rausch), var(--color-rausch-600));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-white);
+      font-size: 22px;
+      font-weight: 800;
+      box-shadow: 0 4px 12px rgba(255, 56, 92, 0.35);
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--color-hof);
+      letter-spacing: -0.3px;
+    }
+
+    .brand-subtitle {
+      font-size: 12px;
+      color: var(--color-foggy);
+      font-weight: 400;
+    }
+
+    /* Floating Center Search Capsule */
+    .nav-search-capsule {
+      background: var(--color-white);
+      border: 1px solid var(--color-bebe);
+      border-radius: var(--radius-pill);
+      box-shadow: var(--shadow-subtle);
+      display: flex;
+      align-items: center;
+      padding: 6px 8px 6px 18px;
+      max-width: 480px;
+      width: 100%;
+      transition: all 0.2s ease;
+    }
+
+    .nav-search-capsule:focus-within {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+      border-color: var(--color-hof);
+    }
+
+    .search-input {
+      border: none;
+      outline: none;
+      font-family: var(--font-family);
+      font-size: 14px;
+      color: var(--color-hof);
+      width: 100%;
+      background: transparent;
+    }
+
+    .search-input::placeholder {
+      color: var(--color-foggy);
+    }
+
+    .search-icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--color-rausch);
+      border: none;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.15s ease, transform 0.15s ease;
+    }
+
+    .search-icon-btn:hover {
+      background: var(--color-rausch-600);
+      transform: scale(1.05);
+    }
+
+    /* Right Header Actions */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      font-family: var(--font-family);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 9px 18px;
+      border-radius: var(--radius-pill);
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+
+    .btn-outline {
+      background: var(--color-white);
+      color: var(--color-hof);
+      border: 1px solid var(--color-bebe);
+    }
+
+    .btn-outline:hover {
+      background: var(--color-faint);
+      border-color: var(--color-hof);
+    }
+
+    .btn-dark {
+      background: var(--color-hof);
+      color: var(--color-white);
+    }
+
+    .btn-dark:hover {
+      background: #000000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    }
+
+    .btn-rausch {
+      background: var(--color-rausch);
+      color: var(--color-white);
+    }
+
+    .btn-rausch:hover {
+      background: var(--color-rausch-600);
+      box-shadow: 0 2px 8px rgba(255, 56, 92, 0.3);
+    }
+
+    .btn-sm {
+      padding: 6px 14px;
+      font-size: 12px;
+    }
+
+    /* ==========================================================================
+       CATEGORY BAR & WAREHOUSE FILTER (Airbnb Style Navigation)
+       ========================================================================== */
+    .filter-section {
+      background: var(--color-white);
+      border-bottom: 1px solid var(--color-bebe);
+      padding: 12px 36px 16px 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: sticky;
+      top: 80px;
+      z-index: 90;
+    }
+
+    /* Category Icon Tabs */
+    .category-tabs {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 4px;
+    }
+
+    .category-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .cat-tab-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      color: var(--color-foggy);
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .cat-tab-item:hover {
+      color: var(--color-hof);
+      border-bottom-color: var(--color-bebe);
+    }
+
+    .cat-tab-item.active {
+      color: var(--color-hof);
+      border-bottom-color: var(--color-hof);
+      font-weight: 700;
+    }
+
+    .cat-tab-icon {
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .cat-tab-label {
+      font-size: 12px;
+    }
+
+    /* Warehouse Location Filter Pills */
+    .warehouse-pills-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .warehouse-pills-row::-webkit-scrollbar {
+      display: none;
+    }
+
+    .warehouse-pill {
+      background: var(--color-faint);
+      color: var(--color-foggy);
+      border: 1px solid var(--color-bebe);
+      border-radius: var(--radius-pill);
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .warehouse-pill:hover {
+      background: #eeeeee;
+      color: var(--color-hof);
+    }
+
+    .warehouse-pill.active {
+      background: var(--color-hof);
+      color: var(--color-white);
+      border-color: var(--color-hof);
+      font-weight: 600;
+    }
+
+    /* ==========================================================================
+       MAIN CONTAINER & AIRBNB LISTING CARDS GRID
+       ========================================================================== */
+    .main-container {
+      max-width: 1600px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 24px 36px 80px 36px;
+      flex: 1;
+    }
+
+    .section-headline {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .headline-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--color-hof);
+      letter-spacing: -0.3px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .headline-count {
+      font-size: 13px;
+      color: var(--color-foggy);
+      font-weight: 500;
+    }
+
+    /* Card Grid (Airbnb Style 4~5 cards per row) */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 28px 24px;
+    }
+
+    /* Individual Listing Card */
+    .item-card {
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      background: transparent;
+      border-radius: var(--radius-cards);
+      transition: transform 0.18s ease;
+      position: relative;
+    }
+
+    .item-card:hover {
+      transform: translateY(-4px);
+    }
+
+    /* Photo Container (1:1 Ratio) */
+    .card-photo-box {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: var(--radius-cards);
+      overflow: hidden;
+      background-color: var(--color-faint);
+      position: relative;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    }
+
+    .card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .item-card:hover .card-img {
+      transform: scale(1.03);
+    }
+
+    /* Badges Overlay */
+    .badge-location-pill {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(4px);
+      color: var(--color-hof);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      z-index: 5;
+    }
+
+    .badge-stock-pill {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      background: rgba(34, 34, 34, 0.88);
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      backdrop-filter: blur(2px);
+      z-index: 5;
+    }
+
+    .badge-stock-pill.low {
+      background: rgba(194, 94, 0, 0.9);
+    }
+
+    .badge-stock-pill.out {
+      background: rgba(193, 53, 21, 0.9);
+    }
+
+    /* Card Photo Change Button (모든 품목 사진 위에 바로 사진변경/삽입 버튼 노출) */
+    .card-photo-change-btn {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(4px);
+      color: var(--color-hof);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: var(--radius-pill);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      z-index: 10;
+    }
+
+    .card-photo-change-btn:hover {
+      background: var(--color-hof);
+      color: var(--color-white);
+      transform: scale(1.06);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Heart Wishlist Icon */
+    .heart-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: transparent;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+      color: white;
+      z-index: 5;
+    }
+
+    .heart-btn:hover {
+      transform: scale(1.15);
+    }
+
+    .heart-btn svg {
+      filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.4));
+    }
+
+    .heart-btn.active svg {
+      fill: var(--color-rausch);
+      stroke: var(--color-rausch);
+    }
+
+    /* Card Details Below Image */
+    .card-body {
+      padding-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .card-title-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .card-item-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--color-hof);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .card-category-tag {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-foggy);
+      background: #f0f0f0;
+      padding: 2px 7px;
+      border-radius: var(--radius-pill);
+      flex-shrink: 0;
+    }
+
+    .card-sub-info-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--color-foggy);
+    }
+
+    .card-donor {
+      font-size: 13px;
+      color: var(--color-foggy);
+    }
+
+    .card-stock-highlight {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-hof);
+      margin-top: 2px;
+    }
+
+    .card-recent-release {
+      font-size: 12px;
+      color: #777;
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      background: var(--color-faint);
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    /* ==========================================================================
+       AIRBNB STYLE DETAIL & USAGE MODAL
+       ========================================================================== */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(3px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 24px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-card {
+      background: var(--color-white);
+      border-radius: 16px;
+      box-shadow: var(--shadow-modal);
+      width: 100%;
+      max-width: 820px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: modalFadeIn 0.2s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.96) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--color-bebe);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--color-hof);
+    }
+
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-foggy);
+      transition: all 0.15s ease;
+    }
+
+    .modal-close-btn:hover {
+      background: var(--color-faint);
+      color: var(--color-hof);
+    }
+
+    .modal-body {
+      padding: 24px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    /* Split Layout inside Item Detail Modal */
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 680px) {
+      .detail-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .detail-photo-side {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .detail-photo-box {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-subtle);
+      border: 1px solid var(--color-bebe);
+      background: var(--color-faint);
+      cursor: pointer;
+    }
+
+    .detail-photo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .detail-photo-overlay-btn {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .detail-photo-box:hover .detail-photo-overlay-btn {
+      opacity: 1;
+    }
+
+    .photo-change-btn-prominent {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-hof);
+      text-align: center;
+      cursor: pointer;
+      padding: 8px 14px;
+      border: 1px solid var(--color-bebe);
+      border-radius: var(--radius-pill);
+      background: var(--color-faint);
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .photo-change-btn-prominent:hover {
+      border-color: var(--color-hof);
+      color: var(--color-white);
+      background: var(--color-hof);
+    }
+
+    .detail-info-side {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .detail-stock-banner {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .detail-stock-num {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--color-hof);
+    }
+
+    /* Takeout / Use Form Box (누르면 어디 팀에서 몇 개 무슨 목적) */
+    .takeout-box {
+      background: #ffffff;
+      border: 1px solid #ffd4dc;
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 10px rgba(255, 56, 92, 0.05);
+    }
+
+    .takeout-box-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--color-hof);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-hof);
+      margin-bottom: 6px;
+    }
+
+    .form-label .req {
+      color: var(--color-rausch);
+    }
+
+    .form-control {
+      width: 100%;
+      height: 40px;
+      border-radius: var(--radius-inputs);
+      border: 1px solid var(--color-bebe);
+      padding: 8px 12px;
+      font-size: 14px;
+      font-family: var(--font-family);
+      color: var(--color-hof);
+      background: var(--color-white);
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+
+    .form-control:focus {
+      border-color: var(--color-hof);
+      box-shadow: 0 0 0 1px var(--color-hof);
+    }
+
+    /* Purpose quick pills */
+    .purpose-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .purpose-btn {
+      border: 1px solid var(--color-bebe);
+      background: var(--color-faint);
+      border-radius: var(--radius-pill);
+      padding: 4px 10px;
+      font-size: 12px;
+      color: var(--color-hof);
+      cursor: pointer;
+    }
+
+    .purpose-btn:hover {
+      background: #e6e6e6;
+    }
+
+    /* Qty Stepper */
+    .qty-stepper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stepper-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--color-bebe);
+      background: var(--color-white);
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stepper-btn:hover {
+      border-color: var(--color-hof);
+      background: var(--color-faint);
+    }
+
+    .stepper-input {
+      width: 80px;
+      height: 38px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 700;
+      border: 1px solid var(--color-bebe);
+      border-radius: var(--radius-inputs);
+    }
+
+    /* Usage History List (어디 팀에서 몇 개 무슨 목적 나열) */
+    .history-section-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--color-hof);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .history-card-item {
+      background: var(--color-faint);
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .history-dept-badge {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--color-hof);
+      background: white;
+      border: 1px solid var(--color-bebe);
+      padding: 3px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .history-purpose-text {
+      font-size: 13px;
+      color: var(--color-hof);
+      flex: 1;
+    }
+
+    .history-qty-badge {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--color-rausch);
+      white-space: nowrap;
+    }
+
+    .history-date {
+      font-size: 11px;
+      color: var(--color-foggy);
+      white-space: nowrap;
+    }
+
+    /* Full Ledger Modal Table */
+    .ledger-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .ledger-table th {
+      background: #fafafa;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--color-bebe);
+      font-weight: 600;
+      color: var(--color-foggy);
+      text-align: left;
+    }
+
+    .ledger-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #f2f2f2;
+      color: var(--color-hof);
+    }
+
+    /* Empty State */
+    .empty-state {
+      padding: 60px 20px;
+      text-align: center;
+      color: var(--color-foggy);
+      grid-column: 1 / -1;
+    }
+
+    /* Toast Notification */
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--color-hof);
+      color: white;
+      padding: 12px 20px;
+      border-radius: var(--radius-pill);
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      animation: toastIn 0.2s ease;
+    }
+
+    @keyframes toastIn {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Print Styles */
+    @media print {
+      .top-header, .filter-section, .header-actions, .card-photo-change-btn, .no-print {
+        display: none !important;
+      }
+      body {
+        background: white;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hidden global file input for instant card photo replacement -->
+  <input type="file" id="globalCardPhotoInput" accept="image/*" style="display:none;" onchange="handleGlobalCardPhotoUpload(event)">
+
+  <!-- Toast Notification -->
+  <div id="appToast" class="toast-msg">
+    <span>📷</span> <span id="appToastText">사진이 변경되었습니다.</span>
+  </div>
+
+  <!-- ==========================================================================
+       1. TOP HEADER (Airbnb Style)
+       ========================================================================== -->
+  <header class="top-header">
+    <div class="brand-area" onclick="resetFilters()">
+      <div class="brand-logo-icon">화</div>
+      <div>
+        <div class="brand-title">화성시남부노인복지관 후원물품 관리대장</div>
+        <div class="brand-subtitle">후원물품 재고 및 부서별 사용 현황</div>
+      </div>
+    </div>
+
+    <!-- Center Search Capsule -->
+    <div class="nav-search-capsule no-print">
+      <input type="text" id="globalSearchInput" class="search-input" placeholder="어떤 후원물품을 찾으시나요? (품명, 후원자 검색)" oninput="filterItems()">
+      <button class="search-icon-btn" onclick="filterItems()" title="검색">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      </button>
+    </div>
+
+    <!-- Right Header Actions -->
+    <div class="header-actions no-print">
+      <button class="btn btn-rausch" onclick="openAddItemModal()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        후원물품 수입 등록
+      </button>
+
+      <button class="btn btn-outline" onclick="openLedgerModal()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        전체 사용대장
+      </button>
+
+      <button class="btn btn-outline" onclick="exportToExcel()" title="재고 및 사용대장 엑셀 다운로드">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        엑셀 저장
+      </button>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       2. AIRBNB CATEGORY BAR & WAREHOUSE FILTERS
+       ========================================================================== -->
+  <section class="filter-section no-print">
+    <!-- Category Tabs with Icons -->
+    <div class="category-tabs" id="categoryTabsContainer">
+      <button class="cat-tab-item active" onclick="selectCategory('전체')">
+        <span class="cat-tab-icon">✨</span>
+        <span class="cat-tab-label">전체</span>
+      </button>
+      <button class="cat-tab-item" onclick="selectCategory('식품')">
+        <span class="cat-tab-icon">🍜</span>
+        <span class="cat-tab-label">식품</span>
+      </button>
+      <button class="cat-tab-item" onclick="selectCategory('식재료')">
+        <span class="cat-tab-icon">🍚</span>
+        <span class="cat-tab-label">식재료</span>
+      </button>
+      <button class="cat-tab-item" onclick="selectCategory('생활용품')">
+        <span class="cat-tab-icon">🧴</span>
+        <span class="cat-tab-label">생활용품</span>
+      </button>
+      <button class="cat-tab-item" onclick="selectCategory('도서')">
+        <span class="cat-tab-icon">📚</span>
+        <span class="cat-tab-label">도서</span>
+      </button>
+      <button class="cat-tab-item" onclick="selectCategory('잡화')">
+        <span class="cat-tab-icon">🛍️</span>
+        <span class="cat-tab-label">잡화</span>
+      </button>
+      <button class="cat-tab-item" onclick="selectCategory('가구')">
+        <span class="cat-tab-icon">🪑</span>
+        <span class="cat-tab-label">가구</span>
+      </button>
+      <button class="cat-tab-item" onclick="selectCategory('기타')">
+        <span class="cat-tab-icon">📦</span>
+        <span class="cat-tab-label">기타</span>
+      </button>
+    </div>
+
+    <!-- Warehouse Pills (지하 1층 창고, 1층 창고, MDF실, 공유냉장고, 공유냉장고 옆 서랍, 3층 창고) -->
+    <div class="warehouse-pills-row" id="warehousePillsContainer">
+      <button class="warehouse-pill active" onclick="selectWarehouse('전체')">
+        전체 창고
+      </button>
+      <button class="warehouse-pill" onclick="selectWarehouse('지하 1층 창고')">
+        지하 1층 창고
+      </button>
+      <button class="warehouse-pill" onclick="selectWarehouse('1층 창고')">
+        1층 창고
+      </button>
+      <button class="warehouse-pill" onclick="selectWarehouse('MDF실')">
+        MDF실
+      </button>
+      <button class="warehouse-pill" onclick="selectWarehouse('공유냉장고')">
+        공유냉장고
+      </button>
+      <button class="warehouse-pill" onclick="selectWarehouse('공유냉장고 옆 서랍')">
+        공유냉장고 옆 서랍
+      </button>
+      <button class="warehouse-pill" onclick="selectWarehouse('3층 창고')">
+        3층 창고
+      </button>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       3. MAIN ITEM CARDS GRID (Airbnb Layout)
+       ========================================================================== -->
+  <main class="main-container">
+    <div class="section-headline">
+      <h2 class="headline-title" id="headlineTitle">
+        후원물품 목록
+      </h2>
+      <span class="headline-count" id="itemCountDisplay">총 0개 물품</span>
+    </div>
+
+    <!-- Grid of Airbnb Cards -->
+    <div class="cards-grid" id="itemsGrid">
+      <!-- Populated dynamically -->
+    </div>
+  </main>
+
+  <!-- ==========================================================================
+       4. DETAIL & USAGE MODAL (사진 + 재고 + 어디팀 몇개 무슨목적)
+       ========================================================================== -->
+  <div class="modal-backdrop" id="modalItemDetail">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title" id="detailModalTitle">후원품 상세 및 사용 등록</div>
+        <button class="modal-close-btn" onclick="closeModal('modalItemDetail')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <input type="hidden" id="detailItemId">
+
+        <!-- Top Section: Photo + Basic Info -->
+        <div class="detail-grid">
+          <div class="detail-photo-side">
+            <!-- Clickable Photo Box for Quick Image Change -->
+            <div class="detail-photo-box" onclick="triggerDetailPhotoUpload()" title="클릭하여 실제 후원물품 사진으로 변경">
+              <img id="detailImg" class="detail-photo-img" src="" alt="후원물품 사진">
+              <div class="detail-photo-overlay-btn">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                <span>실제 사진 넣기 / 변경</span>
+              </div>
+            </div>
+
+            <!-- Dedicated Visible Button Below Photo -->
+            <button type="button" class="photo-change-btn-prominent" onclick="triggerDetailPhotoUpload()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              실제 후원물품 사진 넣기 / 변경
+            </button>
+            <input type="file" id="detailPhotoFileInput" accept="image/*" style="display:none;" onchange="handleDetailPhotoUpload(event)">
+          </div>
+
+          <div class="detail-info-side">
+            <div style="display:flex; gap:6px; align-items:center;">
+              <span id="detailCategoryBadge" class="card-category-tag">식품</span>
+              <span id="detailLocationBadge" class="card-category-tag" style="background:#eef2ff; color:#2563eb;">1층 창고</span>
+            </div>
+
+            <h3 id="detailItemName" style="font-size:20px; font-weight:800; color:var(--color-hof);">품목명</h3>
+            <div id="detailDonorInfo" style="font-size:13px; color:var(--color-foggy);">후원처: 남양농협 · 수입일: 2026-09-02</div>
+
+            <!-- Current Stock Big Highlight -->
+            <div class="detail-stock-banner">
+              <div>
+                <div style="font-size:12px; color:var(--color-foggy); font-weight:600;">현재 보관 재고</div>
+                <div class="detail-stock-num" id="detailStockCount">25 개</div>
+              </div>
+              <div style="text-align:right; font-size:12px; color:var(--color-foggy);">
+                총 수입: <span id="detailTotalInflow">30</span> | 총 사용: <span id="detailTotalOutflow">5</span>
+              </div>
+            </div>
+
+            <div id="detailRemarks" style="font-size:13px; color:#555; background:var(--color-faint); padding:8px 12px; border-radius:8px;">
+              비고 내용
+            </div>
+          </div>
+        </div>
+
+        <!-- Middle Section: Use Form (어디 팀에서 몇 개 무슨 목적) -->
+        <div class="takeout-box">
+          <div class="takeout-box-title">
+            <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--color-rausch);"></span>
+            물품 사용 등록
+          </div>
+
+          <!-- 1. Using Department -->
+          <div class="form-group">
+            <label class="form-label">사용 부서 <span class="req">*</span></label>
+            <select id="takeoutDept" class="form-control" onchange="onDeptChanged()">
+              <option value="운영지원팀">운영지원팀</option>
+              <option value="사회참여팀">사회참여팀</option>
+              <option value="문화복지팀">문화복지팀</option>
+              <option value="지역돌봄팀">지역돌봄팀</option>
+              <option value="주간보호센터">주간보호센터</option>
+              <option value="타기관">타기관 (직접 입력)</option>
+            </select>
+          </div>
+
+          <!-- Custom Institution Input when "타기관" selected -->
+          <div class="form-group" id="customOrgGroup" style="display:none;">
+            <label class="form-label">타기관 명칭 직접 입력 <span class="req">*</span></label>
+            <input type="text" id="customOrgName" class="form-control" placeholder="예: 화성시서부종합사회복지관, 남양지역아동센터 등">
+          </div>
+
+          <!-- 2. Quantity -->
+          <div class="form-group">
+            <label class="form-label">사용 수량 <span class="req">*</span></label>
+            <div class="qty-stepper">
+              <button type="button" class="stepper-btn" onclick="stepQty(-1)">-</button>
+              <input type="number" id="takeoutQty" class="stepper-input" value="1" min="1">
+              <button type="button" class="stepper-btn" onclick="stepQty(1)">+</button>
+              <span id="takeoutUnitSpan" style="font-weight:600; font-size:14px; margin-left:4px;">개</span>
+            </div>
+          </div>
+
+          <!-- 3. Purpose -->
+          <div class="form-group">
+            <label class="form-label">사용 목적 <span class="req">*</span></label>
+            <input type="text" id="takeoutPurpose" class="form-control" placeholder="사용 목적을 입력하거나 아래 추천 항목을 클릭하세요">
+            <div class="purpose-pills">
+              <button type="button" class="purpose-btn" onclick="setPurpose('공유냉장고 채움')">공유냉장고 채움</button>
+              <button type="button" class="purpose-btn" onclick="setPurpose('어르신 프로그램 지원')">어르신 프로그램 지원</button>
+              <button type="button" class="purpose-btn" onclick="setPurpose('경로식당 배식 및 급식 지원')">경로식당 배식</button>
+              <button type="button" class="purpose-btn" onclick="setPurpose('취약계층 어르신 가정 긴급 배부')">취약계층 긴급배부</button>
+              <button type="button" class="purpose-btn" onclick="setPurpose('기관 행사 지원')">기관 행사 지원</button>
+            </div>
+          </div>
+
+          <div style="text-align:right; margin-top:16px;">
+            <button class="btn btn-rausch" onclick="executeTakeout()" style="padding:10px 24px; font-size:14px;">
+              사용 확정 (재고 차감)
+            </button>
+          </div>
+        </div>
+
+        <!-- Bottom Section: Use History (어디 팀에서 몇 개 무슨 목적) -->
+        <div>
+          <div class="history-section-title">
+            <span>📋 사용 이력 (어디 팀에서 몇 개 무슨 목적)</span>
+            <span id="itemHistoryCountBadge" style="font-size:12px; color:var(--color-foggy);">총 0건</span>
+          </div>
+
+          <div class="history-list" id="detailHistoryList">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       5. ADD NEW ITEM MODAL (사진 넣어서 후원품 수입 등록)
+       ========================================================================== -->
+  <div class="modal-backdrop" id="modalAddItem">
+    <div class="modal-card" style="max-width:560px;">
+      <div class="modal-header">
+        <div class="modal-title">새 후원물품 수입 등록</div>
+        <button class="modal-close-btn" onclick="closeModal('modalAddItem')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Photo Selector -->
+        <div class="form-group" style="text-align:center;">
+          <div style="width:130px; height:130px; border-radius:12px; border:2px dashed var(--color-bebe); margin:0 auto 10px auto; overflow:hidden; display:flex; align-items:center; justify-content:center; background:var(--color-faint); cursor:pointer;" onclick="document.getElementById('newItemFileInput').click()">
+            <img id="newItemPreviewImg" src="" style="width:100%; height:100%; object-fit:cover; display:none;">
+            <div id="newItemPreviewText" style="display:flex; flex-direction:column; align-items:center; gap:4px; font-size:11px; color:var(--color-foggy);">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              <span>클릭하여 사진 삽입</span>
+            </div>
+          </div>
+          <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('newItemFileInput').click()">
+            📷 실제 사진 선택하기
+          </button>
+          <input type="file" id="newItemFileInput" accept="image/*" style="display:none;" onchange="handleNewItemPhoto(event)">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">품명 (규격 포함) <span class="req">*</span></label>
+          <input type="text" id="addName" class="form-control" placeholder="예: 해들찬 백미 10kg, 롤화장지 30롤">
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+          <div class="form-group">
+            <label class="form-label">물품 분류 <span class="req">*</span></label>
+            <select id="addCategory" class="form-control">
+              <option value="식품">식품</option>
+              <option value="식재료">식재료</option>
+              <option value="생활용품">생활용품</option>
+              <option value="도서">도서</option>
+              <option value="잡화">잡화</option>
+              <option value="가구">가구</option>
+              <option value="기타">기타</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">보관 창고 <span class="req">*</span></label>
+            <select id="addLocation" class="form-control">
+              <option value="지하 1층 창고">지하 1층 창고</option>
+              <option value="1층 창고" selected>1층 창고</option>
+              <option value="MDF실">MDF실</option>
+              <option value="공유냉장고">공유냉장고</option>
+              <option value="공유냉장고 옆 서랍">공유냉장고 옆 서랍</option>
+              <option value="3층 창고">3층 창고</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+          <div class="form-group">
+            <label class="form-label">수입 수량 <span class="req">*</span></label>
+            <input type="number" id="addQty" class="form-control" min="1" placeholder="예: 20">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">단위 <span class="req">*</span></label>
+            <input type="text" id="addUnit" class="form-control" placeholder="예: 박스, 개, 포, 세트">
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+          <div class="form-group">
+            <label class="form-label">후원자(처) 명 <span class="req">*</span></label>
+            <input type="text" id="addDonor" class="form-control" placeholder="예: 화성상공회의소, 개인 익명">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">수입 일자 <span class="req">*</span></label>
+            <input type="date" id="addDate" class="form-control">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">비고 / 참고사항</label>
+          <input type="text" id="addRemarks" class="form-control" placeholder="예: 유통기한 2027년까지, 취약계층 우선">
+        </div>
+
+        <div style="text-align:right; margin-top:16px;">
+          <button class="btn btn-outline" onclick="closeModal('modalAddItem')" style="margin-right:6px;">취소</button>
+          <button class="btn btn-rausch" onclick="submitNewItem()">수입 등록 완료</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       6. FULL USAGE LEDGER MODAL (전체 사용대장 팝업)
+       ========================================================================== -->
+  <div class="modal-backdrop" id="modalLedger">
+    <div class="modal-card" style="max-width:960px;">
+      <div class="modal-header">
+        <div class="modal-title">화성시남부노인복지관 후원물품 사용대장</div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-outline btn-sm" onclick="exportToExcel()">엑셀 다운로드</button>
+          <button class="modal-close-btn" onclick="closeModal('modalLedger')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="modal-body" style="padding:0;">
+        <div style="overflow-x:auto;">
+          <table class="ledger-table">
+            <thead>
+              <tr>
+                <th>사용일시</th>
+                <th>사용 부서</th>
+                <th>품명</th>
+                <th>사용 수량</th>
+                <th>보관 창고</th>
+                <th>사용 목적</th>
+                <th>담당자</th>
+              </tr>
+            </thead>
+            <tbody id="fullLedgerTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==========================================================================
+       JAVASCRIPT APPLICATION LOGIC
+       ========================================================================== -->
+  <script>
+    const STORAGE_KEY_ITEMS = "hsnambu_airbnb_items_v4";
+    const STORAGE_KEY_LOGS = "hsnambu_airbnb_logs_v4";
+
+    // High quality royalty-free photos matching the items
+    const DEFAULT_ITEMS = [
+      {
+        id: "item-1",
+        name: "해들찬 백미 10kg",
+        category: "식재료",
+        location: "1층 창고",
+        unit: "포",
+        inflowQty: 80,
+        outflowQty: 55,
+        stockQty: 25,
+        donor: "화성상공회의소",
+        receivedDate: "2026-09-02",
+        img: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80",
+        remarks: "온정나눔 공유냉장고 및 저소득 어르신 식사지원"
+      },
+      {
+        id: "item-2",
+        name: "신라면 30입 1박스",
+        category: "식품",
+        location: "공유냉장고",
+        unit: "박스",
+        inflowQty: 60,
+        outflowQty: 48,
+        stockQty: 12,
+        donor: "(주)한맥식품",
+        receivedDate: "2026-09-05",
+        img: "https://images.unsplash.com/photo-1612927601601-6638404737ce?auto=format&fit=crop&w=600&q=80",
+        remarks: "공유냉장고 채움용"
+      },
+      {
+        id: "item-3",
+        name: "카놀라유 3호 선물세트 (500ml 3입)",
+        category: "식재료",
+        location: "1층 창고",
+        unit: "세트",
+        inflowQty: 40,
+        outflowQty: 38,
+        stockQty: 2,
+        donor: "남양농협",
+        receivedDate: "2026-09-10",
+        img: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=600&q=80",
+        remarks: "추석 명절 배부용 잔여분 (재고 2개 남음)"
+      },
+      {
+        id: "item-4",
+        name: "어르신 큰글씨 교양도서 10권 세트",
+        category: "도서",
+        location: "3층 창고",
+        unit: "세트",
+        inflowQty: 20,
+        outflowQty: 12,
+        stockQty: 8,
+        donor: "화성시립도서관",
+        receivedDate: "2026-09-04",
+        img: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=600&q=80",
+        remarks: "복지관 3층 북카페 및 이동도서관 비치용"
+      },
+      {
+        id: "item-5",
+        name: "성인용 안심 기저귀 (특대형 30매)",
+        category: "생활용품",
+        location: "지하 1층 창고",
+        unit: "팩",
+        inflowQty: 50,
+        outflowQty: 45,
+        stockQty: 5,
+        donor: "화성시사회복지협의회",
+        receivedDate: "2026-09-08",
+        img: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80",
+        remarks: "재가복지팀 와상 어르신 긴급 구호용"
+      },
+      {
+        id: "item-6",
+        name: "KF94 숨편한 마스크 (50매입)",
+        category: "생활용품",
+        location: "MDF실",
+        unit: "박스",
+        inflowQty: 100,
+        outflowQty: 70,
+        stockQty: 30,
+        donor: "온누리약국",
+        receivedDate: "2026-09-01",
+        img: "https://images.unsplash.com/photo-1586942593568-29361efcd571?auto=format&fit=crop&w=600&q=80",
+        remarks: "복지관 출입 어르신 및 노인일자리 방역지원"
+      },
+      {
+        id: "item-7",
+        name: "살코기 참치 선물세트 (10캔)",
+        category: "식품",
+        location: "공유냉장고 옆 서랍",
+        unit: "세트",
+        inflowQty: 45,
+        outflowQty: 20,
+        stockQty: 25,
+        donor: "관내 익명 후원자",
+        receivedDate: "2026-09-15",
+        img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80",
+        remarks: "공유냉장고 상온 보관용"
+      },
+      {
+        id: "item-8",
+        name: "비트 드럼 액체세제 2L",
+        category: "생활용품",
+        location: "지하 1층 창고",
+        unit: "개",
+        inflowQty: 50,
+        outflowQty: 15,
+        stockQty: 35,
+        donor: "현대자동차 남양연구소",
+        receivedDate: "2026-09-11",
+        img: "https://images.unsplash.com/photo-1585421514738-01798e348b17?auto=format&fit=crop&w=600&q=80",
+        remarks: "경로식당 위생세탁 및 이동세탁사업 지원용"
+      },
+      {
+        id: "item-9",
+        name: "베지밀 검은콩 두유 (24팩)",
+        category: "식품",
+        location: "공유냉장고",
+        unit: "박스",
+        inflowQty: 50,
+        outflowQty: 20,
+        stockQty: 30,
+        donor: "현대자동차 남양연구소",
+        receivedDate: "2026-09-16",
+        img: "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80",
+        remarks: "문화복지팀 공유냉장고 즉시 공급용"
+      },
+      {
+        id: "item-10",
+        name: "3겹 데코 롤화장지 (30롤)",
+        category: "생활용품",
+        location: "3층 창고",
+        unit: "팩",
+        inflowQty: 60,
+        outflowQty: 25,
+        stockQty: 35,
+        donor: "남양농협",
+        receivedDate: "2026-09-07",
+        img: "https://images.unsplash.com/photo-1584556812952-905ffd0c611a?auto=format&fit=crop&w=600&q=80",
+        remarks: "사회참여팀 노인맞춤돌봄 대상자 지원"
+      },
+      {
+        id: "item-11",
+        name: "접이식 다용도 보조의자",
+        category: "가구",
+        location: "지하 1층 창고",
+        unit: "개",
+        inflowQty: 15,
+        outflowQty: 5,
+        stockQty: 10,
+        donor: "관내 기업 후원",
+        receivedDate: "2026-09-12",
+        img: "https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=600&q=80",
+        remarks: "행사 및 프로그램실 여분 의자"
+      },
+      {
+        id: "item-12",
+        name: "어르신 온열 찜질팩 세트",
+        category: "잡화",
+        location: "1층 창고",
+        unit: "세트",
+        inflowQty: 35,
+        outflowQty: 10,
+        stockQty: 25,
+        donor: "화성시사회복지협의회",
+        receivedDate: "2026-09-18",
+        img: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=600&q=80",
+        remarks: "물리치료실 및 건강증진 프로그램 연계"
+      }
+    ];
+
+    const DEFAULT_LOGS = [
+      {
+        id: "log-1",
+        itemId: "item-1",
+        itemName: "해들찬 백미 10kg",
+        dept: "운영지원팀",
+        qty: 20,
+        unit: "포",
+        purpose: "경로식당 주간 식재료 지원",
+        location: "1층 창고",
+        timestamp: "2026-09-21 11:15",
+        handler: "운영지원팀 영양사"
+      },
+      {
+        id: "log-2",
+        itemId: "item-2",
+        itemName: "신라면 30입 1박스",
+        dept: "문화복지팀",
+        qty: 5,
+        unit: "박스",
+        purpose: "공유냉장고 채움",
+        location: "공유냉장고",
+        timestamp: "2026-09-28 14:20",
+        handler: "문화복지팀 박복지"
+      },
+      {
+        id: "log-3",
+        itemId: "item-9",
+        itemName: "베지밀 검은콩 두유 (24팩)",
+        dept: "지역돌봄팀",
+        qty: 10,
+        unit: "박스",
+        purpose: "취약계층 어르신 가정 긴급 배부",
+        location: "공유냉장고",
+        timestamp: "2026-09-25 10:30",
+        handler: "지역돌봄팀 최주임"
+      },
+      {
+        id: "log-4",
+        itemId: "item-5",
+        itemName: "성인용 안심 기저귀 (특대형 30매)",
+        dept: "주간보호센터",
+        qty: 15,
+        unit: "팩",
+        purpose: "주간보호 이용 어르신 케어 지원",
+        location: "지하 1층 창고",
+        timestamp: "2026-09-27 16:40",
+        handler: "주간보호센터 이선생"
+      },
+      {
+        id: "log-5",
+        itemId: "item-6",
+        itemName: "KF94 숨편한 마스크 (50매입)",
+        dept: "타기관 (남양노인복지센터)",
+        qty: 20,
+        unit: "박스",
+        purpose: "지역 내 연계기관 물품 나눔",
+        location: "MDF실",
+        timestamp: "2026-09-24 15:10",
+        handler: "후원담당자"
+      }
+    ];
+
+    let items = [];
+    let releaseLogs = [];
+    let selectedCategory = "전체";
+    let selectedWarehouse = "전체";
+    let newItemPhotoData = "";
+    let targetUploadItemId = null; // Currently targeted item for quick photo upload
+
+    /* Load & Save LocalStorage */
+    function loadData() {
+      try {
+        const rawItems = localStorage.getItem(STORAGE_KEY_ITEMS);
+        items = rawItems ? JSON.parse(rawItems) : JSON.parse(JSON.stringify(DEFAULT_ITEMS));
+
+        const rawLogs = localStorage.getItem(STORAGE_KEY_LOGS);
+        releaseLogs = rawLogs ? JSON.parse(rawLogs) : JSON.parse(JSON.stringify(DEFAULT_LOGS));
+      } catch (e) {
+        items = JSON.parse(JSON.stringify(DEFAULT_ITEMS));
+        releaseLogs = JSON.parse(JSON.stringify(DEFAULT_LOGS));
+      }
+    }
+
+    function saveData() {
+      localStorage.setItem(STORAGE_KEY_ITEMS, JSON.stringify(items));
+      localStorage.setItem(STORAGE_KEY_LOGS, JSON.stringify(releaseLogs));
+    }
+
+    /* Filter Handlers */
+    function selectCategory(cat) {
+      selectedCategory = cat;
+      document.querySelectorAll(".cat-tab-item").forEach(btn => {
+        btn.classList.toggle("active", btn.innerText.includes(cat));
+      });
+      renderCards();
+    }
+
+    function selectWarehouse(loc) {
+      selectedWarehouse = loc;
+      document.querySelectorAll(".warehouse-pill").forEach(btn => {
+        btn.classList.toggle("active", btn.innerText.trim() === (loc === '전체' ? '전체 창고' : loc));
+      });
+      renderCards();
+    }
+
+    function filterItems() {
+      renderCards();
+    }
+
+    function resetFilters() {
+      selectedCategory = "전체";
+      selectedWarehouse = "전체";
+      document.getElementById("globalSearchInput").value = "";
+      document.querySelectorAll(".cat-tab-item").forEach((btn, idx) => btn.classList.toggle("active", idx === 0));
+      document.querySelectorAll(".warehouse-pill").forEach((btn, idx) => btn.classList.toggle("active", idx === 0));
+      renderCards();
+    }
+
+    /* Helper: Compress and resize image file to prevent localStorage quota overflow */
+    function compressImageFile(file, callback) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const maxDim = 800;
+          let width = img.width;
+          let height = img.height;
+          if (width > height) {
+            if (width > maxDim) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            }
+          } else {
+            if (height > maxDim) {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+          const dataUrl = canvas.toDataURL("image/jpeg", 0.82);
+          callback(dataUrl);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    /* Quick Toast Feedback */
+    function showToast(msg) {
+      const toast = document.getElementById("appToast");
+      const text = document.getElementById("appToastText");
+      text.innerText = msg;
+      toast.style.display = "flex";
+      setTimeout(() => {
+        toast.style.display = "none";
+      }, 3000);
+    }
+
+    /* Trigger Direct Card Photo Upload */
+    function triggerCardPhotoUpload(itemId) {
+      targetUploadItemId = itemId;
+      const fileInput = document.getElementById("globalCardPhotoInput");
+      fileInput.value = "";
+      fileInput.click();
+    }
+
+    function handleGlobalCardPhotoUpload(e) {
+      const file = e.target.files[0];
+      if (!file || !targetUploadItemId) return;
+
+      compressImageFile(file, function(compressedDataUrl) {
+        const item = items.find(i => i.id === targetUploadItemId);
+        if (item) {
+          item.img = compressedDataUrl;
+          saveData();
+          renderCards();
+          showToast(`[${item.name}] 사진이 실제 후원물품 사진으로 변경되었습니다!`);
+        }
+        targetUploadItemId = null;
+      });
+    }
+
+    /* Render Airbnb Cards Grid */
+    function renderCards() {
+      const grid = document.getElementById("itemsGrid");
+      const searchKeyword = (document.getElementById("globalSearchInput").value || "").trim().toLowerCase();
+
+      const filtered = items.filter(item => {
+        if (selectedCategory !== "전체" && item.category !== selectedCategory) return false;
+        if (selectedWarehouse !== "전체" && item.location !== selectedWarehouse) return false;
+        if (searchKeyword) {
+          const matchName = (item.name || "").toLowerCase().includes(searchKeyword);
+          const matchDonor = (item.donor || "").toLowerCase().includes(searchKeyword);
+          const matchLoc = (item.location || "").toLowerCase().includes(searchKeyword);
+          if (!matchName && !matchDonor && !matchLoc) return false;
+        }
+        return true;
+      });
+
+      document.getElementById("itemCountDisplay").innerText = `총 ${filtered.length}개 물품`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <div style="font-size:36px; margin-bottom:12px;">🔍</div>
+            <div style="font-size:16px; font-weight:700; color:var(--color-hof); margin-bottom:4px;">해당하는 후원물품이 없습니다</div>
+            <div style="font-size:13px;">다른 카테고리나 창고를 선택해보세요.</div>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(item => {
+        // Stock badge text
+        let stockBadgeHtml = `<span class="badge-stock-pill">재고 ${item.stockQty}${item.unit}</span>`;
+        if (item.stockQty === 0) {
+          stockBadgeHtml = `<span class="badge-stock-pill out">품절 (0${item.unit})</span>`;
+        } else if (item.stockQty <= 3) {
+          stockBadgeHtml = `<span class="badge-stock-pill low">재고부족 (${item.stockQty}${item.unit})</span>`;
+        }
+
+        // Recent release history
+        const recentLog = releaseLogs.find(l => l.itemId === item.id);
+        const recentText = recentLog ? `최근: ${recentLog.dept} · ${recentLog.qty}${recentLog.unit} (${recentLog.purpose})` : `최근 사용 내역 없음`;
+
+        return `
+          <div class="item-card" onclick="openItemDetailModal('${item.id}')">
+            <!-- 1:1 Photo Box -->
+            <div class="card-photo-box">
+              <img class="card-img" src="${item.img || 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80'}" alt="${item.name}" loading="lazy">
+              
+              <!-- Warehouse Location Badge (Top-left) -->
+              <div class="badge-location-pill">
+                📍 ${item.location}
+              </div>
+
+              <!-- Heart Wishlist Button (Top-right) -->
+              <button class="heart-btn" onclick="event.stopPropagation(); toggleHeart(this)" title="보관함 저장">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+              </button>
+
+              <!-- Stock Badge (Bottom-left) -->
+              ${stockBadgeHtml}
+
+              <!-- Direct Photo Change / Upload Button (Bottom-right) -->
+              <button class="card-photo-change-btn" onclick="event.stopPropagation(); triggerCardPhotoUpload('${item.id}')" title="실제 후원물품 사진 넣기 / 변경">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                사진 변경
+              </button>
+            </div>
+
+            <!-- Card Body Info -->
+            <div class="card-body">
+              <div class="card-title-row">
+                <span class="card-item-name" title="${item.name}">${item.name}</span>
+                <span class="card-category-tag">${item.category}</span>
+              </div>
+              <div class="card-sub-info-row">
+                <span class="card-donor">후원처: ${item.donor}</span>
+                <span style="font-size:11px; color:#999;">${item.receivedDate}</span>
+              </div>
+              <div class="card-stock-highlight">현재 재고: ${item.stockQty} ${item.unit}</div>
+              <div class="card-recent-release" title="${recentText}">${recentText}</div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function toggleHeart(btn) {
+      btn.classList.toggle("active");
+    }
+
+    /* ==========================================================================
+       DETAIL & USAGE MODAL
+       ========================================================================== */
+    function openItemDetailModal(itemId) {
+      const item = items.find(i => i.id === itemId);
+      if (!item) return;
+
+      document.getElementById("detailItemId").value = item.id;
+      document.getElementById("detailImg").src = item.img || "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80";
+      document.getElementById("detailItemName").innerText = item.name;
+      document.getElementById("detailCategoryBadge").innerText = item.category;
+      document.getElementById("detailLocationBadge").innerText = "📍 " + item.location;
+      document.getElementById("detailDonorInfo").innerText = `후원처: ${item.donor} · 수입일: ${item.receivedDate}`;
+      document.getElementById("detailStockCount").innerText = `${item.stockQty} ${item.unit}`;
+      document.getElementById("detailTotalInflow").innerText = `${item.inflowQty} ${item.unit}`;
+      document.getElementById("detailTotalOutflow").innerText = `${item.outflowQty} ${item.unit}`;
+      document.getElementById("detailRemarks").innerText = item.remarks ? `참고사항: ${item.remarks}` : "등록된 추가 참고사항이 없습니다.";
+
+      // Reset Usage form
+      document.getElementById("takeoutDept").value = "운영지원팀";
+      document.getElementById("customOrgGroup").style.display = "none";
+      document.getElementById("customOrgName").value = "";
+      document.getElementById("takeoutQty").value = 1;
+      document.getElementById("takeoutUnitSpan").innerText = item.unit;
+      document.getElementById("takeoutPurpose").value = "";
+
+      renderItemHistoryList(item.id);
+      openModal("modalItemDetail");
+    }
+
+    /* Detail Modal Photo Upload */
+    function triggerDetailPhotoUpload() {
+      const fileInput = document.getElementById("detailPhotoFileInput");
+      fileInput.value = "";
+      fileInput.click();
+    }
+
+    function handleDetailPhotoUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      compressImageFile(file, function(compressedDataUrl) {
+        const itemId = document.getElementById("detailItemId").value;
+        const item = items.find(i => i.id === itemId);
+        if (item) {
+          item.img = compressedDataUrl;
+          document.getElementById("detailImg").src = item.img;
+          saveData();
+          renderCards();
+          showToast(`[${item.name}] 사진이 실제 후원물품 사진으로 변경되었습니다!`);
+        }
+      });
+    }
+
+    function onDeptChanged() {
+      const dept = document.getElementById("takeoutDept").value;
+      const customGroup = document.getElementById("customOrgGroup");
+      if (dept === "타기관") {
+        customGroup.style.display = "block";
+      } else {
+        customGroup.style.display = "none";
+      }
+    }
+
+    function stepQty(delta) {
+      const input = document.getElementById("takeoutQty");
+      let val = parseInt(input.value, 10) || 1;
+      val = Math.max(1, val + delta);
+      input.value = val;
+    }
+
+    function setPurpose(text) {
+      document.getElementById("takeoutPurpose").value = text;
+    }
+
+    /* Execute Usage (어디 팀에서 몇 개 무슨 목적 확정 & 차감) */
+    function executeTakeout() {
+      const itemId = document.getElementById("detailItemId").value;
+      const item = items.find(i => i.id === itemId);
+      if (!item) return;
+
+      let dept = document.getElementById("takeoutDept").value;
+      if (dept === "타기관") {
+        const customName = document.getElementById("customOrgName").value.trim();
+        if (!customName) {
+          alert("타기관 명칭을 직접 입력해주세요. (예: 남양지역아동센터)");
+          document.getElementById("customOrgName").focus();
+          return;
+        }
+        dept = `타기관 (${customName})`;
+      }
+
+      const qty = parseInt(document.getElementById("takeoutQty").value, 10);
+      if (!qty || qty < 1) {
+        alert("사용할 수량을 1개 이상 입력해주세요.");
+        return;
+      }
+
+      const purpose = document.getElementById("takeoutPurpose").value.trim();
+      if (!purpose) {
+        alert("사용 목적을 입력하거나 아래 추천 버튼을 선택해주세요.");
+        document.getElementById("takeoutPurpose").focus();
+        return;
+      }
+
+      if (qty > item.stockQty) {
+        if (!confirm(`현재 남은 재고(${item.stockQty}${item.unit})보다 많은 수량(${qty}${item.unit})입니다. 그래도 사용 처리하시겠습니까?`)) {
+          return;
+        }
+      }
+
+      // Stock Decrement
+      item.outflowQty += qty;
+      item.stockQty = Math.max(0, item.inflowQty - item.outflowQty);
+
+      const now = new Date();
+      const timeStr = now.toISOString().slice(0, 10) + " " + now.toTimeString().slice(0, 5);
+
+      const newLog = {
+        id: "log-" + Date.now(),
+        itemId: item.id,
+        itemName: item.name,
+        dept: dept,
+        qty: qty,
+        unit: item.unit,
+        purpose: purpose,
+        location: item.location,
+        timestamp: timeStr,
+        handler: dept + " 담당자"
+      };
+
+      releaseLogs.unshift(newLog);
+      saveData();
+
+      // Update UI
+      document.getElementById("detailStockCount").innerText = `${item.stockQty} ${item.unit}`;
+      document.getElementById("detailTotalOutflow").innerText = `${item.outflowQty} ${item.unit}`;
+      document.getElementById("takeoutPurpose").value = "";
+      document.getElementById("takeoutQty").value = 1;
+
+      renderItemHistoryList(item.id);
+      renderCards();
+
+      showToast(`[${dept}] ${item.name} ${qty}${item.unit} 사용 등록 완료!`);
+      alert(`[${dept}] ${item.name} ${qty}${item.unit} 사용 등록이 완료되었습니다.\n재고가 자동으로 차감되었습니다.`);
+    }
+
+    /* Render Usage History List for Single Item */
+    function renderItemHistoryList(itemId) {
+      const container = document.getElementById("detailHistoryList");
+      const filtered = releaseLogs.filter(l => l.itemId === itemId);
+
+      document.getElementById("itemHistoryCountBadge").innerText = `총 ${filtered.length}건`;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div style="padding:16px; text-align:center; color:var(--color-foggy); font-size:13px;">아직 사용 이력이 없습니다.</div>`;
+        return;
+      }
+
+      container.innerHTML = filtered.map(log => `
+        <div class="history-card-item">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="history-dept-badge">${log.dept}</span>
+            <span class="history-purpose-text">${log.purpose}</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <span class="history-qty-badge">${log.qty} ${log.unit}</span>
+            <span class="history-date">${log.timestamp}</span>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    /* ==========================================================================
+       ADD NEW ITEM MODAL (후원물품 수입 등록)
+       ========================================================================== */
+    function openAddItemModal() {
+      newItemPhotoData = "";
+      document.getElementById("newItemPreviewImg").style.display = "none";
+      document.getElementById("newItemPreviewText").style.display = "flex";
+      document.getElementById("addName").value = "";
+      document.getElementById("addCategory").value = "식품";
+      document.getElementById("addLocation").value = "1층 창고";
+      document.getElementById("addQty").value = "";
+      document.getElementById("addUnit").value = "박스";
+      document.getElementById("addDonor").value = "";
+      document.getElementById("addDate").valueAsDate = new Date();
+      document.getElementById("addRemarks").value = "";
+      openModal("modalAddItem");
+    }
+
+    function handleNewItemPhoto(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      compressImageFile(file, function(compressedDataUrl) {
+        newItemPhotoData = compressedDataUrl;
+        const preview = document.getElementById("newItemPreviewImg");
+        preview.src = newItemPhotoData;
+        preview.style.display = "block";
+        document.getElementById("newItemPreviewText").style.display = "none";
+      });
+    }
+
+    function submitNewItem() {
+      const name = document.getElementById("addName").value.trim();
+      const category = document.getElementById("addCategory").value;
+      const location = document.getElementById("addLocation").value;
+      const qty = parseInt(document.getElementById("addQty").value, 10);
+      const unit = document.getElementById("addUnit").value.trim() || "개";
+      const donor = document.getElementById("addDonor").value.trim() || "익명";
+      const date = document.getElementById("addDate").value || new Date().toISOString().slice(0, 10);
+      const remarks = document.getElementById("addRemarks").value.trim();
+
+      if (!name || !qty || qty < 1) {
+        alert("품명과 수입 수량을 올바르게 입력해주세요.");
+        return;
+      }
+
+      // Default photo fallback based on category
+      let fallbackPhoto = "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80";
+      if (category === "식품") fallbackPhoto = "https://images.unsplash.com/photo-1612927601601-6638404737ce?auto=format&fit=crop&w=600&q=80";
+      if (category === "도서") fallbackPhoto = "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=600&q=80";
+      if (category === "생활용품") fallbackPhoto = "https://images.unsplash.com/photo-1585421514738-01798e348b17?auto=format&fit=crop&w=600&q=80";
+      if (category === "가구") fallbackPhoto = "https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=600&q=80";
+      if (category === "잡화") fallbackPhoto = "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=600&q=80";
+
+      const newItem = {
+        id: "item-" + Date.now(),
+        name,
+        category,
+        location,
+        unit,
+        inflowQty: qty,
+        outflowQty: 0,
+        stockQty: qty,
+        donor,
+        receivedDate: date,
+        img: newItemPhotoData || fallbackPhoto,
+        remarks
+      };
+
+      items.unshift(newItem);
+      saveData();
+      closeModal("modalAddItem");
+      renderCards();
+      showToast(`[${name}] 신규 후원품 수입 등록 완료!`);
+      alert(`[${name}] 신규 후원품 수입 등록이 완료되었습니다.`);
+    }
+
+    /* ==========================================================================
+       FULL USAGE LEDGER MODAL (전체 사용대장)
+       ========================================================================== */
+    function openLedgerModal() {
+      const tbody = document.getElementById("fullLedgerTableBody");
+      if (releaseLogs.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="padding:30px; text-align:center; color:var(--color-foggy);">사용 기록이 없습니다.</td></tr>`;
+      } else {
+        tbody.innerHTML = releaseLogs.map(log => `
+          <tr>
+            <td>${log.timestamp}</td>
+            <td><strong>${log.dept}</strong></td>
+            <td><strong>${log.itemName}</strong></td>
+            <td><span style="font-weight:700; color:var(--color-rausch);">${log.qty}</span> ${log.unit}</td>
+            <td>${log.location}</td>
+            <td>${log.purpose}</td>
+            <td>${log.handler || "-"}</td>
+          </tr>
+        `).join("");
+      }
+      openModal("modalLedger");
+    }
+
+    /* ==========================================================================
+       EXCEL EXPORT (금액 제외 깔끔한 재고 & 사용대장)
+       ========================================================================== */
+    function exportToExcel() {
+      // 1. Stock sheet data (No prices/amounts)
+      const stockData = items.map((item, idx) => ({
+        "연번": idx + 1,
+        "품명": item.name,
+        "물품분류": item.category,
+        "보관창고": item.location,
+        "단위": item.unit,
+        "총수입수량": item.inflowQty,
+        "총사용수량": item.outflowQty,
+        "현재재고": item.stockQty,
+        "후원처": item.donor,
+        "수입일자": item.receivedDate,
+        "비고": item.remarks || ""
+      }));
+
+      // 2. Usage logs data
+      const logData = releaseLogs.map((log, idx) => ({
+        "연번": idx + 1,
+        "사용일시": log.timestamp,
+        "사용부서": log.dept,
+        "품명": log.itemName,
+        "사용수량": log.qty,
+        "단위": log.unit,
+        "보관창고": log.location,
+        "사용목적": log.purpose,
+        "담당자": log.handler || "-"
+      }));
+
+      if (window.XLSX) {
+        const wb = XLSX.utils.book_new();
+        const wsStock = XLSX.utils.json_to_sheet(stockData);
+        const wsLog = XLSX.utils.json_to_sheet(logData);
+        XLSX.utils.book_append_sheet(wb, wsStock, "후원물품재고현황");
+        XLSX.utils.book_append_sheet(wb, wsLog, "후원물품사용대장");
+        XLSX.writeFile(wb, `화성시남부노인복지관_후원물품_수입사용대장_${new Date().toISOString().slice(0,10)}.xlsx`);
+      } else {
+        alert("엑셀 라이브러리를 불러오는 중입니다. 잠시 후 다시 시도해주세요.");
+      }
+    }
+
+    /* ==========================================================================
+       MODAL UTILS
+       ========================================================================== */
+    function openModal(id) {
+      document.getElementById(id).classList.add("open");
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove("open");
+    }
+
+    // Close on backdrop click
+    document.querySelectorAll(".modal-backdrop").forEach(backdrop => {
+      backdrop.addEventListener("click", function(e) {
+        if (e.target === this) {
+          this.classList.remove("open");
+        }
+      });
+    });
+
+    // Boot
+    window.addEventListener("DOMContentLoaded", () => {
+      loadData();
+      renderCards();
+    });
+  </script>
+</body>
+</html>

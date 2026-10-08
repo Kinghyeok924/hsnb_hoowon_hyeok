@@ -1,0 +1,8 @@
+# Executables
+*.exe
+임시/*.exe
+
+# OS / Temporary files
+Thumbs.db
+Desktop.ini
+.DS_Store
